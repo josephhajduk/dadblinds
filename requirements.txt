@@ -1,1 +1,3 @@
 pyserial
+webiopi
+psutil

@@ -16,4 +16,3 @@ for arg in sys.argv[1:]:
     ser.write((arg+"\r").encode())
     time.sleep(.1)
 
-
