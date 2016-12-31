@@ -13,7 +13,7 @@ metadata {
         command "up"
         command "down"
         command "myposition"
-        command "restart"
+        command "stop"
     }
 
     simulator {
@@ -31,9 +31,12 @@ metadata {
         standardTile("myposition", "device.position", inactiveLabel: false, decoration: "flat") {
             state "default", action:"myposition", label: "myposition", displayName: "myposition"
         }
+        standardTile("stop", "device.position", inactiveLabel: false, decoration: "flat") {
+            state "default", action:"stop", label: "stop", displayName: "stop"
+        }
 
         main "down"
-        details(["up","down","myposition"])
+        details(["up","down","myposition","stop"])
     }
 }
 
@@ -60,6 +63,12 @@ def down() {
 def myposition() {
     log.debug "somfy blinds saved position"
     def uri = "/" + motor + "/myposition"
+    postAction(uri)
+}
+
+def stop() {
+    log.debug "somfy blinds stopped"
+    def uri = "/" + motor + "/stop"
     postAction(uri)
 }
 
@@ -133,5 +142,6 @@ private String convertIPtoHex(ipAddress) {
 }
 
 private String convertPortToHex(port) {
-    String hexport = port.toString().format( '%04x', port.toInteger() )
+    String hexport = port.toString().format('%04x', port.toInteger())
     return hexport
+}

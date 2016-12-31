@@ -1,3 +1,2 @@
 pyserial
-webiopi
-psutil
+aiohttp
