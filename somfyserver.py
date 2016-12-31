@@ -1,8 +1,11 @@
 from aiohttp import web
 import serial, sys
 import time
+import asyncio
 
-async def down(motor):
+@asyncio.coroutine
+def down(request):
+    motor = request.match_info.get('motor', "01")
     print(motor)
     ser = serial.Serial(
         port='/dev/ttyUSB0',
@@ -16,7 +19,9 @@ async def down(motor):
     ser.close()
     return web.Response(text="DOWN")
 
-async def up(motor):
+@asyncio.coroutine
+def up(request):
+    motor = request.match_info.get('motor', "01")
     print(motor)
     ser = serial.Serial(
         port='/dev/ttyUSB0',
@@ -30,7 +35,9 @@ async def up(motor):
     ser.close()
     return web.Response(text="up")
 
-async def stop(motor):
+@asyncio.coroutine
+def stop(request):
+    motor = request.match_info.get('motor', "01")
     print(motor)
     ser = serial.Serial(
         port='/dev/ttyUSB0',
@@ -44,7 +51,9 @@ async def stop(motor):
     ser.close()
     return web.Response(text="up")
 
-async def myposition(motor):
+@asyncio.coroutine
+def myposition(request):
+    motor = request.match_info.get('motor', "01")
     print(motor)
     ser = serial.Serial(
         port='/dev/ttyUSB0',
@@ -64,5 +73,6 @@ app = web.Application()
 app.router.add_route("POST", '/{motor}/up', up)
 app.router.add_route("POST", '/{motor}/down', down)
 app.router.add_route("POST", '/{motor}/myposition', myposition)
+app.router.add_route("POST", '/{motor}/stop', stop)
 
 web.run_app(app)
