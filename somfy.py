@@ -3,6 +3,19 @@ from aiohttp import web
 import serial, sys
 import time
 import asyncio
+from telnetlib import Telnet
+
+@asyncio.coroutine
+def rus(request):
+    command = request.match_info.get('command', "VERSION")
+    print("RUS COMMAND:"+command)
+    tn = Telnet('192.168.2.227', 9621)
+    tn.write(command.encode("ascii")+b"\r")
+    response = tn.read_until(b"\r", timeout=10)
+    tn.close()
+    response_str = response.decode("ascii")
+    print("RESPONSE: "+response_str)
+    return web.Response(text=response_str)
 
 @asyncio.coroutine
 def down(request):
@@ -57,5 +70,7 @@ app = web.Application()
 app.router.add_route("POST", '/{motor}/up', up)
 app.router.add_route("POST", '/{motor}/down', down)
 app.router.add_route("POST", '/{motor}/stop', stop)
+app.router.add_route("GET", '/rus/{command}', rus)
+app.router.add_route("POST", '/rus/{command}', rus)
 
 web.run_app(app)
