@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from aiohttp import web
 import serial, sys
 import time
