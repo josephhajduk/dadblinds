@@ -7,7 +7,7 @@ from telnetlib import Telnet
 
 @asyncio.coroutine
 def rus(request):
-    command = request.match_info.get('command', "VERSION").replace("_"," ").replace("!","\"").encode("ascii","ignore")
+    command = request.match_info.get('command', "VERSION").replace("_"," ").encode("ascii","ignore")
     print("RUS COMMAND:"+str(command))
     tn = Telnet('192.168.2.227', 9621)
     tn.write(command+b"\r")
