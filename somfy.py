@@ -7,15 +7,23 @@ from telnetlib import Telnet
 
 @asyncio.coroutine
 def rus(request):
-    command = request.match_info.get('command', "VERSION").replace("_"," ").encode("ascii","ignore")
-    print("RUS COMMAND:"+str(command))
+    command = request.match_info.get('command', "VERSION").replace("_"," ")#.encode("ascii","ignore")
+    commands = command.split("|")
+    print("RUS COMMAND:"+str(commands))
+
     tn = Telnet('192.168.2.227', 9621)
-    tn.write(command+b"\r")
-    response = tn.read_until(b"\r", timeout=10)
+
+    response = ""
+
+    for com in commands:
+        tn.write(com.encode("ascii","ignore")+b"\r")
+        response += tn.read_until(b"\r", timeout=10).decode("ascii")+"\n"
+
     tn.close()
-    response_str = response.decode("ascii")
+    response_str = response
     print("RESPONSE: "+response_str)
     return web.Response(text=response_str)
+
 
 @asyncio.coroutine
 def down(request):
